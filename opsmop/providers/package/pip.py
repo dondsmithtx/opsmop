@@ -15,7 +15,7 @@
 from opsmop.providers.package.package import Package
 
 TIMEOUT = 3600
-VERSION_CHECK = "pip search {name} |sed 's/.*(\(.*\))/\\1/' |cut -f1 -d ' '"
+VERSION_CHECK = "pip show {name} |grep Version |cut -f2 -d ' '"
 INSTALL = "pip install {name}"
 UPGRADE = "pip install -U {name}"
 UNINSTALL = "pip uninstall {name} -y"
