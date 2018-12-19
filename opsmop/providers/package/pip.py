@@ -31,6 +31,9 @@ class Pip(Package):
             return None
         return output
  
+    def get_default_timeout(self):
+        return TIMEOUT
+
     def apply(self):
         which = None
         if self.version:
