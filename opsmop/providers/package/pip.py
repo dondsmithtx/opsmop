@@ -18,7 +18,6 @@ TIMEOUT = 3600
 VERSION_CHECK = "pip show {name} |grep Version |cut -f2 -d ' '"
 INSTALL = "pip install {name}"
 INSTALL_VERSION = "pip install {name}=={version}"
-UPGRADE = "pip install -U {name}"
 UNINSTALL = "pip uninstall {name} -y"
 
 
@@ -47,7 +46,7 @@ class Pip(Package):
             which = self._get_install_command()
         elif self.should('upgrade'):
             self.do('upgrade')
-            which = UPGRADE.format(name=self.name)
+            which = INSTALL_VERSION.format(name=self.name, version=self.version)
         elif self.should('remove'):
             self.do('remove')
             which = UNINSTALL.format(name=self.name)
