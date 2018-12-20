@@ -13,12 +13,12 @@
 # limitations under the License.
 
 from opsmop.providers.package.package import Package
-import logging
 
 TIMEOUT = 3600
 VERSION_CHECK = "pip show {name} |grep Version |cut -f2 -d ' '"
 INSTALL = "pip install {name}"
 INSTALL_VERSION = "pip install {name}=={version}"
+UPGRADE = "pip install -U {name}"
 UNINSTALL = "pip uninstall {name} -y"
 
 
@@ -33,15 +33,18 @@ class Pip(Package):
  
     def get_default_timeout(self):
         return TIMEOUT
+	
+    def _get_install_command(self):
+        if self.version:
+            return INSTALL_VERSION.format(name=self.name, version=self.version)
+        else:
+            return INSTALL.format(name=self.name)
 
     def apply(self):
         which = None
-        if self.version:
-            self.do('install_version')
-            which = INSTALL_VERSION.format(name=self.name, version=self.version)
-        elif self.should('install'):
+        if self.should('install'):
             self.do('install')
-            which = INSTALL.format(name=self.name)
+            which = self._get_install_command()
         elif self.should('upgrade'):
             self.do('upgrade')
             which = UPGRADE.format(name=self.name)
